@@ -17,6 +17,12 @@
   "bugs": {
     "url": "https://github.com/Red-French/jqueryMobile_weather_app/issues"
   },
+  "engines": {
+    "node": "6.0.0"
+  },
+  "jshintConfig": {
+  "esversion": 6
+},
   "homepage": "https://github.com/Red-French/jqueryMobile_weather_app#readme",
   "devDependencies": {
     "nodemon": "^1.9.2"
