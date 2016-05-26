@@ -1,6 +1,9 @@
 $(document).ready(function() {
 
+  let geoFlag = null;
+
   const icons = {
+    'blank':  '',
     'clear-day': 'B',
     'clear-night': 'C',
     'rain': 'R',
@@ -32,7 +35,6 @@ $(document).ready(function() {
   };
 
   function loadWeather(cityCoords) {
-    console.log(cityCoords);
     let latlng = cityCoords.coords.latitude + ',' + cityCoords.coords.longitude;  // create string as API URL requires (https://api.forecast.io/forecast/a52853f6b4cb5a11f44d22cb01949a6d/37.8267,-122.423)
 
     const forecastURL = "https://api.forecast.io/forecast/a52853f6b4cb5a11f44d22cb01949a6d/" + latlng;  // API URL
@@ -43,7 +45,10 @@ $(document).ready(function() {
       contentType: 'application/json',
       dataType: 'jsonp',
       success: function(json) {
-        console.log(json);
+        if (geoFlag === true) {
+          $('#location').html('Where You\'re At');
+          geoFlag = false;
+        }
         $('#current_temp').html(Math.round(json.currently.temperature) + '&#176;F');  // display current temp from json data
         $('#current_summary').html(json.currently.summary);  // display current summary from json data
         $('#current_temp').attr('data-icon', icons[json.currently.icon]);  // get icon data from json data, pass to 'icons' array for Meteocons icon-letter match
@@ -61,11 +66,13 @@ $(document).ready(function() {
   function loadCity(city) {  // receives value of city clicked on
     if (city === 'Current Location') {
       if ( navigator.geolocation) {  // if browser has geolocator
-console.log('in geolocator');
+        geoFlag = true;
         navigator.geolocation.getCurrentPosition(loadWeather, loadDefaultCity);  // if success, loadWeather(), if failure (or user denies access to current location data), loadDefaultCity()
-        $('#location').html('Where you is');  // update location in DOM
+        $('#current_temp').attr('data-icon', icons['blank']);
+        $('#current_temp').html('');
+        $('#current_summary').html('');
+        $('#location').html('Hold on! Waiting for Geolocator...');  // user message in DOM
       } else {  // browser does not have geolocator
-        console.log('in geo else for default city');
         loadDefaultCity();
       }
     } else {
