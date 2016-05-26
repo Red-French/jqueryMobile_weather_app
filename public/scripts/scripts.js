@@ -16,19 +16,19 @@ $(document).ready(function() {
   // using the HTML5 geolocation API, which means that, for the current location, will use the browser's ability to provide the latitude and longitude of the user's current location.
 
   const cities = {
-    'Anaheim'           : {coords:  {latitude: 33.8352778, longitude: -117.9136111} },
-    'Anchorage'         : {coords:  {latitude: 61.2180556, longitude: -149.9002778} },
-    'Bahamas'           : {coords:  {latitude: 25.025885,  longitude: -78.035889 } },
-    'Brentwood'         : {coords:  {latitude: 36.0330556, longitude: -86.7827778 } },
-    'Chapel Hill'       : {coords:  {latitude: 35.6264581, longitude: -86.6933305} },
-    'Franklin'          : {coords:  {latitude: 35.9250637, longitude: -86.86889} },
-    'Hermitage'         : {coords:  {latitude: 36.1961664, longitude: -86.6224959} },
-    'Murfreesboro'      : {coords:  {latitude: 35.8456213, longitude: -86.39027} },
-    'Nashville'         : {coords:  {latitude: 36.1658899, longitude: -86.7844432} },
-    'New Johnsonville'  : {coords:  {latitude: 36.0211715, longitude: -87.9669765} },
-    'Pottsville'        : {coords:  {latitude: 35.6378474, longitude: -86.825278} },
-    'Seattle'           : {coords:  {latitude: 47.6062095, longitude: -122.3320708 } }
-    // 'current location': {coords : {lat, lng:} }
+    'Anaheim'           : { coords:  { latitude: 33.8352778, longitude: -117.9136111 } },
+    'Anchorage'         : { coords:  { latitude: 61.2180556, longitude: -149.9002778 } },
+    'Bahamas'           : { coords:  { latitude: 25.025885,  longitude: -78.035889 } },
+    'Brentwood'         : { coords:  { latitude: 36.0330556, longitude: -86.7827778 } },
+    'Chapel Hill'       : { coords:  { latitude: 35.6264581, longitude: -86.6933305 } },
+    'Franklin'          : { coords:  { latitude: 35.9250637, longitude: -86.86889 } },
+    'Hermitage'         : { coords:  { latitude: 36.1961664, longitude: -86.6224959 } },
+    'Murfreesboro'      : { coords:  { latitude: 35.8456213, longitude: -86.39027 } },
+    'Nashville'         : { coords:  { latitude: 36.1658899, longitude: -86.7844432 } },
+    'New Johnsonville'  : { coords:  { latitude: 36.0211715, longitude: -87.9669765 } },
+    'Pottsville'        : { coords:  { latitude: 35.6378474, longitude: -86.825278 } },
+    'Seattle'           : { coords:  { latitude: 47.6062095, longitude: -122.3320708 } },
+    'Current Location'  : ''
   };
 
   function loadWeather(cityCoords) {
@@ -54,16 +54,29 @@ $(document).ready(function() {
     });
   }
 
-  loadCity('Chapel Hill');
+  function loadDefaultCity() {
+    loadCity('Chapel Hill');
+  }
 
   function loadCity(city) {  // receives value of city clicked on
-    // console.log(city);
-    $('#location').html(city);  // update location in DOM
-    loadWeather(cities[city]);
+    if (city === 'Current Location') {
+      if ( navigator.geolocation) {  // if browser has geolocator
+console.log('in geolocator');
+        navigator.geolocation.getCurrentPosition(loadWeather, loadDefaultCity);  // if success, loadWeather(), if failure (or user denies access to current location data), loadDefaultCity()
+      } else {  // browser does not have geolocator
+        console.log('in geo else for default city');
+        loadDefaultCity();
+      }
+    } else {
+      $('#location').html(city);  // update location in DOM
+      loadWeather(cities[city]);
+    }
   }
 
   $('a.city').bind('click', function() {  // when a city is clicked, bind the click functionality
     loadCity($(this).html());  // pass value of city clicked on to loadCity()
   });
+
+  loadCity('Chapel Hill');
 
 });
