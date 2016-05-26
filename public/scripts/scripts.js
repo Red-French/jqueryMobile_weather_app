@@ -63,6 +63,7 @@ $(document).ready(function() {
       if ( navigator.geolocation) {  // if browser has geolocator
 console.log('in geolocator');
         navigator.geolocation.getCurrentPosition(loadWeather, loadDefaultCity);  // if success, loadWeather(), if failure (or user denies access to current location data), loadDefaultCity()
+        $('#location').html('Where you is');  // update location in DOM
       } else {  // browser does not have geolocator
         console.log('in geo else for default city');
         loadDefaultCity();
