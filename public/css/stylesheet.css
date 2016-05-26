@@ -12,5 +12,17 @@
 
 .icon:before {
 	font-family: 'MeteoconsRegular';
-	content: attr(data-icon);
+	content: attr(data-icon); /* display the 'data-icon' attribute value */
+}
+
+#current_temp {
+  font-size: 3em;
+}
+
+#current_summary {
+  font-size: 1.5em;
+}
+
+.content {
+  text-align: center;
 }
